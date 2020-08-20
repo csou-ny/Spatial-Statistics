@@ -1,0 +1,33 @@
+cd C:\Users\MyComputer\Desktop\STATA\Workspace
+import delimited C:\Users\MyComputer\Desktop\Transfer\ManhattanCSV.csv
+save Manhattan
+// Use "clear" to return to main dataset when done locally in memory
+// To save: save Manhattan, replace
+
+//Time Series- Create time variables
+gen date1 = date(datestart,"MDY")
+format date1 %td
+list 
+gen month= month(date1)
+gen yr = year(date1)
+save Manhattan, replace
+
+
+//* filter here between 2008 and 2017
+ keep if (yr <=2017) & (yr>=2008)
+save Manhattan2 //new filtered dataset
+
+//
+contract month, freq(count)
+contract yr, freq(count)
+
+//
+
+tabulate offenselevel
+//either one is fine, they say the same thing
+graph pie, over(offenselevel)
+graph bar (count), over(offenselevel)
+
+contract offenselevel offensedescript, zero freq(count) nomiss
+list
+
